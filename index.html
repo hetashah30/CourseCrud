@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="img/jpg" href="./book-removebg-preview.png">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <title>Add Course Page</title>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <a class="navbar-brand" href="#">Navbar</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+              <div class="navbar-nav">
+                <a class="nav-item nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
+                <a class="nav-item nav-link" href="#">Features</a>
+                <a class="nav-item nav-link" href="#">Pricing</a>
+                <a class="nav-item nav-link disabled" href="#">Disabled</a>
+              </div>
+            </div>
+          </nav>
+    </header>
+
+    <main>
+        <div class="container mt-5 col-6">
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" placeholder="Chapter Name" aria-label="Recipient's username" aria-describedby="button-addon2">
+                <button id="add_btn" class="btn btn-outline-success" type="button" id="button-addon2">Add</button>
+            </div>
+            <ul id="parentList" class="list-group">
+                <li class="list-group-item d-flex justify-content-between">
+                    <h3 class="flex-grow-1">Chapter 1</h3> 
+                    <button class="btn btn-warning mx-3" onclick="editChapter(this)" >Edit</button> <!-- here mx is for margin -->
+                    <button class="btn btn-danger" onclick="removeChapter(this)">Remove</button>
+                </li> 
+            </ul>
+        </div>
+    </main>
+
+    <script>
+        //to add click:
+        let addBtn = document.getElementById('add_btn'); //selectore for add button
+        addBtn.addEventListener('click', addChapter)
+        function addChapter(e){
+            //to grab the text which is written in chapter name after the clicking of add button: (actually it is prev sibling of add button)
+            //console.log(e) //to check whether the pointer is pointing in console or not when clicked
+            let currentBtn = e.currentTarget;
+            let currentInput = currentBtn.previousElementSibling
+            //console.log(currentInput.value); //to check if current input is as an output in console or not
+            let currentChapterName = currentInput.value
+            
+            //to create a new element in the list and add that current input value as a child (li) to the parent list (ul)
+            let newLi = document.createElement('li');
+            // newLi.classList.add('list-group-item');
+            newLi.className = "list-group-item d-flex justify-content-between"
+            newLi.innerHTML = `<h3 class="flex-grow-1">${currentChapterName}</h3>    
+                    <button class="btn btn-warning mx-3" onclick="editChapter(this)">Edit</button> 
+                    <button class="btn btn-danger" onclick="removeChapter(this)">Remove</button>` //here `` backtics are used for multiline code. And this inner element is made to get the input written in chapter name with the same style as the Chapter 1 is written (in <h3>Chapter 1</h3>)
+            let parentList = document.getElementById('parentList'); //selectore for parent list
+            parentList.appendChild(newLi);
+        }
+            //for remove button (remove the text wriiten in that block):
+            //Method 1:-(remove button)
+            // let removeBtn = newLi.querySelector('.btn-danger');
+            // removeBtn.addEventListener('click', removeChapter)
+            // function removeChapter(e){
+            //     //to remove the element from the parent list (ul)
+            //     let parentList = document.getElementById('parentList');
+            //     parentList.removeChild(e.target.parentNode);
+
+            //method 2:- (remove button) write onclick="removeChapter(this) in remove button written above & Also copy paste it in innerHtml
+            function removeChapter(CurrElement) {
+                //console.log(CurrElement.parentElement) //to check whether li comes in console after clicking remove in console
+                CurrElement.parentElement.remove();
+            }
+            //to write msg "nothing is here" when the parent list is empty:-
+            let parentList = document.getElementById('parentList');
+            parentList.addEventListener('click', function(e){
+                if(parentList.children.length == 0){
+                    alert('No Chapter will be here!')
+            }
+            })
+
+            //For Edit button:- here we will edit as: when edit is clicked the written element itself will change into an input filler
+            //write onclick="editChapter(this) in edit button written above & Also copy paste it in innerHtml
+            function editChapter(CurrElement) {
+                //console.log(CurrElement.previousElementSibling) //to check whether h3 element comes in console when edid button is clicked
+                if(CurrElement.textContent == "Done"){
+                    CurrElement.textContent = "Edit"
+                    let currChapterName = CurrElement.previousElementSibling.value;
+                    let currHeading = document.createElement('h3');
+                    currHeading.className = "flex-grow-1"
+                    currHeading.textContent = currChapterName;
+                    CurrElement.parentElement.replaceChild(currHeading,CurrElement.previousElementSibling)
+
+                }
+                else{
+                    CurrElement.textContent = "Done"
+                    let currChapterName = CurrElement.previousElementSibling.textContent
+                    let currInput = document.createElement('input');
+                    currInput.type = 'text';
+                    currInput.className = "form-control"
+                    currInput.placeholder = "Chapter Name"
+                    currInput.value = currChapterName;
+
+                    CurrElement.parentElement.replaceChild(currInput,CurrElement.previousElementSibling)
+
+                }
+            }
+    </script>
+</body>
+</html>
